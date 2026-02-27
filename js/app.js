@@ -1,6 +1,8 @@
 import { DateUtils } from './date-utils.js';
 import { Storage } from './storage.js';
 import { MusicPlayer } from './player.js';
+import { CoverExtractor } from './cover-extractor.js';
+import { LikesManager } from './likes.js';
 
 class App {
     constructor() {
@@ -13,6 +15,7 @@ class App {
 
     async init() {
         try {
+            LikesManager.init();
             await this.loadSongs();
             if (this.isHistoryPage) {
                 this.renderHistory();
@@ -70,6 +73,7 @@ class App {
         const recEl = document.getElementById('recommendation-text');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        const likeBtn = document.getElementById('like-btn');
 
         // Set Date
         dateDisplay.textContent = DateUtils.formatDate(dateStr);
@@ -102,16 +106,41 @@ class App {
             artistEl.textContent = song.artist;
             recEl.textContent = song.recommendation;
             
-            albumArt.src = song.coverImage;
-            bgLayer.style.backgroundImage = `url('${song.backgroundImage || song.coverImage}')`;
+            const fallbackCover = song.coverImage;
+            const fallbackBg = song.backgroundImage || song.coverImage;
+
+            albumArt.src = fallbackCover;
+            bgLayer.style.backgroundImage = `url('${fallbackBg}')`;
 
             // Load audio
             this.player.load(song.audioFile);
+
+            CoverExtractor.getCoverObjectUrl(song.audioFile).then((objectUrl) => {
+                if (!objectUrl) return;
+                if (!this.currentSong || this.currentSong.date !== song.date) return;
+                albumArt.src = objectUrl;
+                if (!song.backgroundImage || song.backgroundImage === song.coverImage) {
+                    bgLayer.style.backgroundImage = `url('${objectUrl}')`;
+                }
+            });
             
             // Restore volume preference
             const prefs = Storage.getPreferences();
             this.player.setVolume(prefs.volume);
             document.getElementById('volume-slider').value = prefs.volume;
+            if (likeBtn) {
+                likeBtn.disabled = false;
+                const isLiked = Storage.isLiked(song.date);
+                this.setLikeButtonState(isLiked, 0); // 0 as placeholder
+                
+                // Fetch actual count
+                LikesManager.getLikesCount(song.date).then(count => {
+                    if (this.currentSong && this.currentSong.date === song.date) {
+                        const currentLiked = Storage.isLiked(song.date);
+                        this.setLikeButtonState(currentLiked, count);
+                    }
+                });
+            }
 
         } else {
             // No song for this date
@@ -121,6 +150,10 @@ class App {
             albumArt.src = "assets/images/default-cover.jpg"; // Should exist or handle error
             document.getElementById('play-pause-btn').disabled = true;
             document.getElementById('main-play-btn').style.display = 'none';
+            if (likeBtn) {
+                likeBtn.disabled = true;
+                this.setLikeButtonState(false);
+            }
         }
     }
 
@@ -129,7 +162,9 @@ class App {
         const mainPlayBtn = document.getElementById('main-play-btn');
         const seekSlider = document.getElementById('seek-slider');
         const volumeSlider = document.getElementById('volume-slider');
+        const volumeBtn = document.getElementById('volume-btn');
         const playOverlay = document.getElementById('play-overlay');
+        const likeBtn = document.getElementById('like-btn');
 
         const togglePlay = () => {
             if (this.currentSong) {
@@ -138,24 +173,64 @@ class App {
             }
         };
 
-        playBtn.onclick = togglePlay;
-        mainPlayBtn.onclick = togglePlay;
+        if (playBtn) playBtn.onclick = togglePlay;
+        if (mainPlayBtn) mainPlayBtn.onclick = togglePlay;
         
         // Also toggle when clicking the overlay
-        playOverlay.onclick = (e) => {
-            if (e.target === playOverlay) togglePlay();
-        };
+        if (playOverlay) {
+            playOverlay.onclick = (e) => {
+                if (e.target === playOverlay) togglePlay();
+            };
+        }
 
-        seekSlider.oninput = (e) => {
-            const time = (e.target.value / 100) * this.player.audio.duration;
-            this.player.seek(time);
-        };
+        if (seekSlider) {
+            seekSlider.oninput = (e) => {
+                const time = (e.target.value / 100) * this.player.audio.duration;
+                this.player.seek(time);
+            };
+        }
 
-        volumeSlider.oninput = (e) => {
-            const val = parseFloat(e.target.value);
-            this.player.setVolume(val);
-            Storage.savePreferences({ volume: val });
-        };
+        if (volumeSlider) {
+            volumeSlider.oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                this.player.setVolume(val);
+                Storage.savePreferences({ volume: val });
+            };
+        }
+        
+        // Mute/Unmute toggle
+        if (volumeBtn) {
+            volumeBtn.onclick = () => {
+                const currentMute = this.player.audio.muted;
+                this.player.setMute(!currentMute);
+                volumeBtn.style.opacity = !currentMute ? '0.3' : '1';
+            };
+        }
+
+        if (likeBtn) {
+            likeBtn.onclick = async () => {
+                if (!this.currentSong) return;
+                
+                // Optimistic update
+                const liked = Storage.toggleLike(this.currentSong.date);
+                let count = parseInt(likeBtn.dataset.count || 0);
+                
+                if (liked) {
+                    count++;
+                    LikesManager.like(this.currentSong.date).then(newCount => {
+                        // Update with real count from server if still on same song
+                        if (this.currentSong && this.currentSong.date === this.currentSong.date) {
+                             this.setLikeButtonState(liked, newCount);
+                        }
+                    });
+                } else {
+                     // We don't implement unlike on server side for simplicity/anti-abuse, but client side we toggle visual
+                     // count--; 
+                }
+                
+                this.setLikeButtonState(liked, count);
+            };
+        }
     }
 
     updateProgress(current, total) {
@@ -172,22 +247,50 @@ class App {
     }
 
     updatePlayButton(isPlaying) {
-        const btn = document.getElementById('play-pause-btn');
         const mainBtn = document.getElementById('main-play-btn');
         const overlay = document.getElementById('play-overlay');
         const art = document.getElementById('album-art');
+        const artWrapper = document.querySelector('.album-art-wrapper');
+        
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
 
         if (isPlaying) {
-            btn.textContent = '⏸';
-            mainBtn.style.display = 'none'; // Hide big play button
-            overlay.style.opacity = '0'; // Hide overlay
-            art.classList.add('playing');
+            if (playIcon) playIcon.style.display = 'none';
+            if (pauseIcon) pauseIcon.style.display = 'block';
+            
+            if (mainBtn) mainBtn.style.display = 'none'; // Hide big play button
+            if (overlay) overlay.style.opacity = '0'; // Hide overlay
+            if (art) art.classList.add('playing');
+            if (artWrapper) artWrapper.classList.add('is-playing');
         } else {
-            btn.textContent = '▶';
-            mainBtn.style.display = 'block';
-            overlay.style.opacity = '1';
-            art.classList.remove('playing');
+            if (playIcon) playIcon.style.display = 'block';
+            if (pauseIcon) pauseIcon.style.display = 'none';
+            
+            if (mainBtn) mainBtn.style.display = 'block';
+            if (overlay) overlay.style.opacity = '1';
+            if (art) art.classList.remove('playing');
+            if (artWrapper) artWrapper.classList.remove('is-playing');
         }
+    }
+
+    setLikeButtonState(isLiked, count = 0) {
+        const likeBtn = document.getElementById('like-btn');
+        if (!likeBtn) return;
+        
+        const heartIcon = `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+        
+        // If count is passed as number, update it. If not passed (or 0/undefined in some flows), keep existing if possible or default
+        if (typeof count === 'number' && count > 0) {
+            likeBtn.dataset.count = count;
+            likeBtn.innerHTML = heartIcon + `<span class="like-count">${count}</span>`;
+        } else {
+             // Keep existing count or just show icon if no count yet
+             const currentCount = likeBtn.dataset.count || '';
+             likeBtn.innerHTML = heartIcon + (currentCount ? `<span class="like-count">${currentCount}</span>` : '');
+        }
+        
+        likeBtn.classList.toggle('is-liked', isLiked);
     }
 
     handleSongEnd() {

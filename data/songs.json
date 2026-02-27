@@ -2,39 +2,39 @@
   "songs": [
     {
       "date": "2026-02-26",
-      "title": "Yesterday's Memory",
-      "artist": "SoundHelix",
-      "album": "Demo Collection",
-      "audioFile": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "title": "我将在何处游荡",
+      "artist": "AniFace",
+      "album": "",
+      "audioFile": "assets/audio/AniFace - 我将在何处游荡.mp3",
       "coverImage": "https://picsum.photos/300/300?random=1",
       "backgroundImage": "https://picsum.photos/1920/1080?random=1",
-      "recommendation": "A calm piece to reflect on the past day. (Demo Audio)",
-      "genre": "Electronic",
-      "duration": 372
+      "recommendation": "昨日推荐",
+      "genre": "",
+      "duration": 0
     },
     {
       "date": "2026-02-27",
-      "title": "Today's Energy",
-      "artist": "SoundHelix",
-      "album": "Demo Collection",
-      "audioFile": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      "title": "海屿你",
+      "artist": "马也_Crabbit",
+      "album": "",
+      "audioFile": "assets/audio/马也_Crabbit - 海屿你.mp3",
       "coverImage": "https://picsum.photos/300/300?random=2",
       "backgroundImage": "https://picsum.photos/1920/1080?random=2",
-      "recommendation": "Start your day with full energy! (Demo Audio)",
-      "genre": "Electronic",
-      "duration": 425
+      "recommendation": "今日推荐",
+      "genre": "",
+      "duration": 0
     },
     {
       "date": "2026-02-28",
-      "title": "Future Vibes",
-      "artist": "SoundHelix",
-      "album": "Demo Collection",
-      "audioFile": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      "title": "邱有句",
+      "artist": "夏の喚く",
+      "album": "",
+      "audioFile": "assets/audio/夏の喚く - 邱有句.mp3",
       "coverImage": "https://picsum.photos/300/300?random=3",
       "backgroundImage": "https://picsum.photos/1920/1080?random=3",
-      "recommendation": "Looking forward to what's coming next. (Demo Audio)",
-      "genre": "Electronic",
-      "duration": 345
+      "recommendation": "明日推荐",
+      "genre": "",
+      "duration": 0
     }
   ]
 }

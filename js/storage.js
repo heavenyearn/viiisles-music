@@ -4,7 +4,8 @@
 
 const KEYS = {
     HISTORY: 'daily_song_history',
-    PREFERENCES: 'daily_song_preferences'
+    PREFERENCES: 'daily_song_preferences',
+    LIKES: 'daily_song_likes'
 };
 
 const DEFAULT_PREFERENCES = {
@@ -68,6 +69,42 @@ export const Storage = {
         } catch (e) {
             console.error('Error reading preferences:', e);
             return DEFAULT_PREFERENCES;
+        }
+    },
+
+    getLikes() {
+        try {
+            const data = localStorage.getItem(KEYS.LIKES);
+            return data ? JSON.parse(data) : [];
+        } catch (e) {
+            console.error('Error reading likes:', e);
+            return [];
+        }
+    },
+
+    isLiked(date) {
+        try {
+            return this.getLikes().includes(date);
+        } catch (_) {
+            return false;
+        }
+    },
+
+    toggleLike(date) {
+        try {
+            const likes = this.getLikes();
+            const idx = likes.indexOf(date);
+            if (idx >= 0) {
+                likes.splice(idx, 1);
+                localStorage.setItem(KEYS.LIKES, JSON.stringify(likes));
+                return false;
+            }
+            likes.push(date);
+            localStorage.setItem(KEYS.LIKES, JSON.stringify(likes));
+            return true;
+        } catch (e) {
+            console.error('Error saving likes:', e);
+            return this.isLiked(date);
         }
     }
 };

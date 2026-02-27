@@ -6,6 +6,7 @@
 export class MusicPlayer {
     constructor(callbacks) {
         this.audio = new Audio();
+        this.audio.loop = true; // Enable loop by default
         this.callbacks = callbacks || {}; // onTimeUpdate, onEnded, onPlay, onPause, onError
         this.initEvents();
     }
@@ -82,6 +83,10 @@ export class MusicPlayer {
      */
     setVolume(value) {
         this.audio.volume = Math.max(0, Math.min(1, value));
+    }
+
+    setMute(isMuted) {
+        this.audio.muted = isMuted;
     }
 
     /**
