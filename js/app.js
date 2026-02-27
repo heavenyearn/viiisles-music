@@ -224,8 +224,12 @@ class App {
                         }
                     });
                 } else {
-                     // We don't implement unlike on server side for simplicity/anti-abuse, but client side we toggle visual
-                     // count--; 
+                     count = Math.max(0, count - 1);
+                     LikesManager.unlike(this.currentSong.date).then(newCount => {
+                        if (this.currentSong && this.currentSong.date === this.currentSong.date) {
+                             this.setLikeButtonState(liked, newCount);
+                        }
+                     });
                 }
                 
                 this.setLikeButtonState(liked, count);
