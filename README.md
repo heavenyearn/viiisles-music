@@ -11,7 +11,7 @@ A static website to recommend a song every day, hosted on GitHub Pages.
 
 2. **Configuration**:
    - **Likes Feature**:
-     - Uses free [CountAPI](https://countapi.xyz/). No registration or configuration required.
+     - Uses free [CounterAPI.dev](https://counterapi.dev/). No registration or configuration required.
      - Just works out of the box.
 
    - **Songs**:
