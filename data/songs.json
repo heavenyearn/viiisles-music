@@ -1,92 +1,92 @@
 {
   "songs": [
     {
-      "date": "2026-02-26",
-      "title": "我将在何处游荡",
-      "artist": "AniFace",
       "album": "",
-      "audioFile": "assets/audio/AniFace - 我将在何处游荡.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=1",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=1",
-      "genre": "",
-      "duration": 0
-    },
-    {
-      "date": "2026-02-27",
-      "title": "海屿你",
-      "artist": "马也_Crabbit",
-      "album": "",
-      "audioFile": "assets/audio/马也_Crabbit - 海屿你.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=2",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=2",
-      "genre": "",
-      "duration": 0
-    },
-    {
-      "date": "2026-02-28",
-      "title": "邱有句",
-      "artist": "夏の喚く",
-      "album": "",
-      "audioFile": "assets/audio/夏の喚く - 邱有句.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=3",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=3",
-      "genre": "",
-      "duration": 0
-    },
-        {
-      "date": "2026-03-02",
-      "title": "没人在乎你",
-      "artist": "反光镜",
-      "album": "",
-      "audioFile": "assets/audio/反光镜 - 没人在乎你.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=5",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=5",
-      "genre": "",
-      "duration": 0
-    },
-    {
-      "date": "2026-03-03",
-      "title": "For River - Piano (Johnny's Version)",
-      "artist": "Kan R. Gao",
-      "album": "",
-      "audioFile": "assets/audio/Kan R. Gao - For River - Piano (Johnny's Version).mp3",
-      "coverImage": "https://picsum.photos/300/300?random=4",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=4",
-      "genre": "",
-      "duration": 0
-    },
-    {
-      "date": "2026-03-04",
-      "title": "共鸣",
-      "artist": "周深",
-      "album": "",
-      "audioFile": "assets/audio/周深 - 共鸣.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=6",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=6",
-      "genre": "",
-      "duration": 0
-    },
-    {
-      "date": "2026-03-06",
-      "title": "愿情（箫版）",
       "artist": "洪尘",
-      "album": "",
       "audioFile": "assets/audio/洪尘 - 愿情（箫版）.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=8",
       "backgroundImage": "https://picsum.photos/1920/1080?random=8",
+      "coverImage": "https://picsum.photos/300/300?random=8",
+      "date": "2026-03-06",
+      "duration": 0,
+      "genre": "",
+      "title": "愿情（箫版）"
+    },
+    {
+      "album": "",
+      "artist": "孟凡明",
+      "audioFile": "assets/audio/孟凡明 - 某某.mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=7",
+      "coverImage": "https://picsum.photos/300/300?random=7",
+      "date": "2026-03-05",
+      "duration": 0,
+      "genre": "",
+      "title": "某某"
+    },
+    {
+      "album": "",
+      "artist": "周深",
+      "audioFile": "assets/audio/周深 - 共鸣.mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=6",
+      "coverImage": "https://picsum.photos/300/300?random=6",
+      "date": "2026-03-04",
+      "duration": 0,
+      "genre": "",
+      "title": "共鸣"
+    },
+    {
+      "album": "",
+      "artist": "Kan R. Gao",
+      "audioFile": "assets/audio/Kan R. Gao - For River - Piano (Johnny's Version).mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=4",
+      "coverImage": "https://picsum.photos/300/300?random=4",
+      "date": "2026-03-03",
+      "duration": 0,
+      "genre": "",
+      "title": "For River - Piano (Johnny's Version)"
+    },
+    {
+      "date": "2026-03-02",
+      "title": "我是真的爱上你",
+      "artist": "刘大拿",
+      "album": "",
+      "audioFile": "assets/audio/刘大拿 - 我是真的爱上你.mp3",
+      "coverImage": "http://p1.music.126.net/7hr06HQ-FAEsChbqaOVbMw==/109951170067113074.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=92",
       "genre": "",
       "duration": 0
     },
     {
-      "date": "2026-03-05",
-      "title": "某某",
-      "artist": "孟凡明",
       "album": "",
-      "audioFile": "assets/audio/孟凡明 - 某某.mp3",
-      "coverImage": "https://picsum.photos/300/300?random=7",
-      "backgroundImage": "https://picsum.photos/1920/1080?random=7",
+      "artist": "夏の喚く",
+      "audioFile": "assets/audio/夏の喚く - 邱有句.mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=3",
+      "coverImage": "https://picsum.photos/300/300?random=3",
+      "date": "2026-02-28",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "邱有句"
+    },
+    {
+      "album": "",
+      "artist": "马也_Crabbit",
+      "audioFile": "assets/audio/马也_Crabbit - 海屿你.mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=2",
+      "coverImage": "https://picsum.photos/300/300?random=2",
+      "date": "2026-02-27",
+      "duration": 0,
+      "genre": "",
+      "title": "海屿你"
+    },
+    {
+      "album": "",
+      "artist": "AniFace",
+      "audioFile": "assets/audio/AniFace - 我将在何处游荡.mp3",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=1",
+      "coverImage": "https://picsum.photos/300/300?random=1",
+      "date": "2026-02-26",
+      "duration": 0,
+      "genre": "",
+      "title": "我将在何处游荡"
     }
   ]
 }

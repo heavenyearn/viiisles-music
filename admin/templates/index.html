@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐推荐管理后台</title>
+    <style>
+        :root {
+            --primary: #1db954;
+            --primary-hover: #1ed760;
+            --danger: #ff4d4f;
+            --secondary: #6c757d;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --border: #e2e8f0;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 20px; background: var(--bg); color: var(--text); }
+        .container { max-width: 1280px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h1, h2, h3 { color: var(--text); margin-top: 0; }
+        h1 { margin-bottom: 30px; border-bottom: 2px solid var(--bg); padding-bottom: 15px; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
+        
+        /* Grid Layout */
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+        
+        /* Sidebar */
+        .sidebar { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid var(--border); height: fit-content; }
+        
+        /* Form */
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #4a5568; }
+        input[type="text"], input[type="date"], input[type="file"], textarea { 
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; 
+            font-size: 14px; box-sizing: border-box; transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1); }
+        
+        button { 
+            padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; 
+            background: var(--primary); color: white; font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        button.secondary { background: var(--secondary); }
+        button.secondary:hover { background: #5a6268; }
+        button.danger { background: var(--danger); }
+        button.danger:hover { background: #ff7875; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { background: #f8fafc; font-weight: 600; color: #4a5568; position: sticky; top: 0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8fafc; }
+        
+        .cover-img { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        /* Toast */
+        #toast { 
+            position: fixed; bottom: 30px; right: 30px; 
+            background: #2d3748; color: white; padding: 12px 24px; 
+            border-radius: 8px; opacity: 0; transition: all 0.3s; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;
+            display: flex; align-items: center; gap: 10px; font-weight: 500;
+        }
+        
+        .cookie-box {
+            background: #e6fffa; border: 1px solid #b2f5ea; padding: 15px; 
+            border-radius: 8px; margin-bottom: 25px;
+        }
+        .cookie-box h3 { color: #285e61; font-size: 1rem; margin-bottom: 10px; }
+        .cookie-box p { color: #319795; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 每日一歌 · 管理后台</h1>
+        
+        <div class="grid">
+            <!-- Sidebar: Add Song -->
+            <div class="sidebar">
+                <div class="cookie-box">
+                    <h3>网易云 VIP 权限 (Cookie)</h3>
+                    <p style="font-size:0.85em;">在此粘贴 <code>MUSIC_U</code> Cookie 可解锁 VIP 下载。</p>
+                    <textarea id="cookie-input" rows="3" placeholder="粘贴 Cookie 内容..."></textarea>
+                    <button onclick="saveCookie()" style="width:100%; margin-top:10px; padding:8px; font-size:0.85rem;" class="secondary">保存 Cookie</button>
+                </div>
+
+                <h2 style="font-size:1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px;">添加新歌曲</h2>
+                
+                <div class="form-group">
+                    <label>网易云音乐 链接 / ID</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="netease-id" placeholder="例如: 123456 或 粘贴链接">
+                        <button onclick="fetchMetadata()" style="white-space:nowrap;">获取信息</button>
+                    </div>
+                </div>
+                
+                <form id="song-form" onsubmit="event.preventDefault(); addSong();">
+                    <div class="form-group">
+                        <label>推荐日期</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>歌名</label>
+                        <input type="text" id="title" required placeholder="自动获取...">
+                    </div>
+                    <div class="form-group">
+                        <label>歌手</label>
+                        <input type="text" id="artist" required placeholder="自动获取...">
+                    </div>
+                    <div class="form-group">
+                        <label>音频来源</label>
+                        <div id="audio-status" style="margin-bottom:8px; font-size:0.85em; color:#718096; background:#edf2f7; padding:8px; border-radius:4px;">等待获取...</div>
+                        <!-- Hidden inputs for auto-download -->
+                        <input type="hidden" id="audio-url">
+                        <input type="hidden" id="audio-filename">
+                        <!-- Manual upload fallback -->
+                        <label style="font-size:0.85em; margin-bottom:5px; margin-top:10px; color:#4a5568;">或者手动上传文件 (VIP下载失败时):</label>
+                        <input type="file" id="audio-file" accept=".mp3,.flac,.m4a">
+                    </div>
+                    <div class="form-group">
+                        <label>封面图预览</label>
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <img id="cover-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23eee'%3E%3Crect width='100' height='100'/%3E%3C/svg%3E" style="width:80px; height:80px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
+                            <input type="text" id="cover-url" placeholder="封面图片链接..." readonly style="flex:1; font-size:0.85em; color:#718096; background:#f7fafc;">
+                        </div>
+                    </div>
+                    <button type="submit" style="width:100%; margin-top:10px; padding:12px;">➕ 添加到列表</button>
+                </form>
+            </div>
+            
+            <!-- Main: Song List -->
+            <div class="main-content">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <h2 style="margin:0;">📅 推荐排期表</h2>
+                    <div style="display:flex; gap:10px;">
+                        <button class="secondary" onclick="loadSongs()">刷新列表</button>
+                        <button onclick="saveChanges()">💾 保存更改</button>
+                        <button class="danger" onclick="gitPush()">🚀 发布 (Git Push)</button>
+                    </div>
+                </div>
+                
+                <div style="background:white; border-radius:8px; border:1px solid var(--border); overflow:hidden;">
+                    <table id="songs-table">
+                        <thead>
+                            <tr>
+                                <th style="width:140px;">日期</th>
+                                <th style="width:80px;">封面</th>
+                                <th>歌曲信息</th>
+                                <th>文件路径</th>
+                                <th style="width:80px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast"></div>
+
+    <script>
+        let songsData = { songs: [] };
+        
+        // Load songs on init
+        loadSongs();
+        loadCookie();
+
+        async function loadCookie() {
+            try {
+                const res = await fetch('/api/cookie');
+                const data = await res.json();
+                if (data.cookie) {
+                    document.getElementById('cookie-input').value = data.cookie;
+                }
+            } catch(e) {}
+        }
+
+        async function saveCookie() {
+            const cookie = document.getElementById('cookie-input').value.trim();
+            if (!cookie) return showToast('Please enter a cookie', 'error');
+            try {
+                await fetch('/api/cookie', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ cookie })
+                });
+                showToast('Cookie saved!');
+            } catch (e) {
+                showToast('Failed to save cookie', 'error');
+            }
+        }
+
+        async function loadSongs() {
+            try {
+                const res = await fetch('/api/songs');
+                songsData = await res.json();
+                renderTable();
+            } catch (e) {
+                showToast('Failed to load songs: ' + e, 'error');
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.querySelector('#songs-table tbody');
+            tbody.innerHTML = '';
+            
+            songsData.songs.forEach((song, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="date" value="${song.date}" onchange="updateSong(${index}, 'date', this.value)"></td>
+                    <td><img src="${song.coverImage}" class="cover-img"></td>
+                    <td>
+                        <input type="text" value="${song.title}" onchange="updateSong(${index}, 'title', this.value)" style="width:100%; font-weight:600; margin-bottom:4px;" placeholder="歌名"><br>
+                        <input type="text" value="${song.artist}" onchange="updateSong(${index}, 'artist', this.value)" style="width:100%; font-size:0.9em; color:#666;" placeholder="歌手">
+                    </td>
+                    <td><div style="font-size:0.85em; color:#718096; word-break:break-all;">${song.audioFile}</div></td>
+                    <td>
+                        <button class="danger" onclick="deleteSong(${index})" style="padding:6px 12px; font-size:0.85em;">🗑 删除</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateSong(index, field, value) {
+            songsData.songs[index][field] = value;
+        }
+
+        function deleteSong(index) {
+            if (confirm('确定要删除这首歌吗？')) {
+                songsData.songs.splice(index, 1);
+                renderTable();
+            }
+        }
+
+        async function fetchMetadata() {
+            const query = document.getElementById('netease-id').value;
+            if (!query) return showToast('请输入链接或 ID', 'error');
+            
+            const btn = document.querySelector('button[onclick="fetchMetadata()"]');
+            const originalText = btn.textContent;
+            btn.textContent = '获取中...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch('/api/netease/parse', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ query })
+                });
+                const data = await res.json();
+                
+                if (data.error) throw new Error(data.error);
+                
+                // Fill form
+                document.getElementById('title').value = data.title;
+                document.getElementById('artist').value = data.artist;
+                document.getElementById('cover-url').value = data.cover;
+                document.getElementById('cover-preview').src = data.cover;
+                document.getElementById('cover-preview').style.display = 'block';
+                
+                // Audio info
+                document.getElementById('audio-url').value = data.audio_url;
+                document.getElementById('audio-filename').value = data.filename;
+                
+                const statusEl = document.getElementById('audio-status');
+                statusEl.textContent = '✅ 信息获取成功，准备下载';
+                statusEl.style.color = '#276749';
+                statusEl.style.background = '#f0fff4';
+                
+                // Suggest date (tomorrow of last song)
+                if (songsData.songs.length > 0) {
+                    const lastDate = new Date(songsData.songs[0].date);
+                    lastDate.setDate(lastDate.getDate() + 1);
+                    document.getElementById('date').value = lastDate.toISOString().split('T')[0];
+                } else {
+                    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                }
+                
+                showToast('获取成功！');
+            } catch (e) {
+                showToast(e.message, 'error');
+                const statusEl = document.getElementById('audio-status');
+                statusEl.textContent = '❌ 获取失败: ' + e.message;
+                statusEl.style.color = '#742a2a';
+                statusEl.style.background = '#fff5f5';
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function addSong() {
+            const date = document.getElementById('date').value;
+            const title = document.getElementById('title').value;
+            const artist = document.getElementById('artist').value;
+            const coverUrl = document.getElementById('cover-url').value;
+            const audioUrl = document.getElementById('audio-url').value;
+            const audioFilename = document.getElementById('audio-filename').value;
+            const fileInput = document.getElementById('audio-file');
+            
+            if (!title || !date) return showToast('请填写必填项', 'error');
+            
+            let finalPath = '';
+            
+            // Step 1: Handle Audio File
+            const btn = document.querySelector('form button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ 处理中...';
+            btn.disabled = true;
+            
+            try {
+                if (fileInput.files.length > 0) {
+                    // Manual upload
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+                    formData.append('filename', audioFilename || `${artist} - ${title}.mp3`);
+                    
+                    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error);
+                    finalPath = data.path;
+                    
+                } else if (audioUrl) {
+                    // Auto download
+                    const res = await fetch('/api/download', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ url: audioUrl, filename: audioFilename })
+                    });
+                    const data = await res.json();
+                    if (data.error) {
+                         // If auto download fails (e.g. VIP), prompt user
+                         throw new Error('自动下载失败 (可能是VIP歌曲)。请手动下载 MP3 并上传。');
+                    }
+                    finalPath = data.path;
+                } else {
+                    throw new Error('没有音频来源');
+                }
+                
+                // Step 2: Add to List
+                songsData.songs.unshift({
+                    date,
+                    title,
+                    artist,
+                    album: "",
+                    audioFile: finalPath,
+                    coverImage: coverUrl || `https://picsum.photos/300/300?random=${Math.floor(Math.random()*100)}`,
+                    backgroundImage: `https://picsum.photos/1920/1080?random=${Math.floor(Math.random()*100)}`,
+                    genre: "",
+                    duration: 0
+                });
+                
+                // Sort
+                songsData.songs.sort((a, b) => b.date.localeCompare(a.date));
+                
+                renderTable();
+                showToast('添加成功！记得点击“保存更改”。');
+                
+                // Reset form
+                document.getElementById('song-form').reset();
+                document.getElementById('cover-preview').style.display = 'none';
+                document.getElementById('audio-status').textContent = '等待获取...';
+                document.getElementById('audio-status').style.background = '#edf2f7';
+                document.getElementById('audio-status').style.color = '#718096';
+                
+            } catch (e) {
+                showToast(e.message, 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function saveChanges() {
+            try {
+                const res = await fetch('/api/songs', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(songsData)
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                showToast('保存成功！');
+            } catch (e) {
+                showToast('保存失败: ' + e.message, 'error');
+            }
+        }
+        
+        async function gitPush() {
+            if (!confirm('确定要提交并推送到 GitHub 吗？')) return;
+            const btn = document.querySelector('button[onclick="gitPush()"]');
+            const originalText = btn.textContent;
+            btn.textContent = '🚀 推送中...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/git/push', { method: 'POST' });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                showToast('发布成功！');
+            } catch (e) {
+                showToast('Git Push 失败: ' + e.message, 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const el = document.getElementById('toast');
+            el.innerHTML = (type === 'error' ? '❌ ' : '✅ ') + msg;
+            el.style.backgroundColor = type === 'error' ? '#c53030' : '#2f855a';
+            el.style.opacity = 1;
+            setTimeout(() => el.style.opacity = 0, 3000);
+        }
+    </script>
+</body>
+</html>
