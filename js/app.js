@@ -54,10 +54,52 @@ class App {
             onEnded: () => this.handleSongEnd(),
             onPlay: () => this.updatePlayButton(true),
             onPause: () => this.updatePlayButton(false),
-            onError: (e) => console.error('Player error:', e)
+            onError: (e) => {
+                console.error('Player error:', e);
+                // Try to detect 404/source errors
+                 // Note: HTML5 Audio errors are generic, usually code 4 (MEDIA_ERR_SRC_NOT_SUPPORTED) if 404
+                 if (e.target && e.target.error && (e.target.error.code === 4 || e.target.error.code === 3)) {
+                      this.showToast('这是往期的推荐啦，可以自行网易云查找资源哦', 'info');
+                 } else {
+                      this.showToast('播放出错，请重试', 'error');
+                 }
+                this.updatePlayButton(false);
+            }
         });
 
         this.bindPlayerControls();
+    }
+
+    showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        let icon = 'ℹ️';
+        if (type === 'error') icon = '⚠️';
+        if (type === 'success') icon = '✅';
+
+        toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+        
+        container.appendChild(toast);
+
+        // Trigger reflow
+        void toast.offsetWidth;
+        
+        // Show
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        // Hide after 3s
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    container.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
     }
 
     renderHome() {

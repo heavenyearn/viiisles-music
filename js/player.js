@@ -34,6 +34,7 @@ export class MusicPlayer {
 
         this.audio.addEventListener('error', (e) => {
             console.error('Audio playback error:', e);
+            // Pass the error event/target back
             if (this.callbacks.onError) this.callbacks.onError(e);
         });
         

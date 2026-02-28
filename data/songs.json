@@ -32,6 +32,61 @@
       "backgroundImage": "https://picsum.photos/1920/1080?random=3",
       "genre": "",
       "duration": 0
+    },
+        {
+      "date": "2026-03-02",
+      "title": "没人在乎你",
+      "artist": "反光镜",
+      "album": "",
+      "audioFile": "assets/audio/反光镜 - 没人在乎你.mp3",
+      "coverImage": "https://picsum.photos/300/300?random=5",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=5",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-03",
+      "title": "For River - Piano (Johnny's Version)",
+      "artist": "Kan R. Gao",
+      "album": "",
+      "audioFile": "assets/audio/Kan R. Gao - For River - Piano (Johnny's Version).mp3",
+      "coverImage": "https://picsum.photos/300/300?random=4",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=4",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-04",
+      "title": "共鸣",
+      "artist": "周深",
+      "album": "",
+      "audioFile": "assets/audio/周深 - 共鸣.mp3",
+      "coverImage": "https://picsum.photos/300/300?random=6",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=6",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-06",
+      "title": "愿情（箫版）",
+      "artist": "洪尘",
+      "album": "",
+      "audioFile": "assets/audio/洪尘 - 愿情（箫版）.mp3",
+      "coverImage": "https://picsum.photos/300/300?random=8",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=8",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-05",
+      "title": "某某",
+      "artist": "孟凡明",
+      "album": "",
+      "audioFile": "assets/audio/孟凡明 - 某某.mp3",
+      "coverImage": "https://picsum.photos/300/300?random=7",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=7",
+      "genre": "",
+      "duration": 0
     }
   ]
 }
