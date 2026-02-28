@@ -234,11 +234,28 @@
             songsData.songs[index][field] = value;
         }
 
-        function deleteSong(index) {
-            if (confirm('确定要删除这首歌吗？')) {
-                songsData.songs.splice(index, 1);
-                renderTable();
+        async function deleteSong(index) {
+            const song = songsData.songs[index];
+            if (!confirm(`确定要删除 "${song.title}" 吗？\n\n注意：这将同时尝试删除服务器上的音频文件！`)) return;
+
+            // Delete file first
+            if (song.audioFile && song.audioFile.startsWith('assets/audio/')) {
+                try {
+                    await fetch('/api/files/delete', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ path: song.audioFile })
+                    });
+                    // Even if file delete fails (e.g. not found), we continue to delete entry
+                } catch (e) {
+                    console.error('Failed to delete file:', e);
+                }
             }
+
+            // Delete entry
+            songsData.songs.splice(index, 1);
+            renderTable();
+            showToast('已删除歌曲及文件，请记得保存更改。');
         }
 
         async function fetchMetadata() {

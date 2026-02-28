@@ -39,6 +39,8 @@ def index():
 def handle_cookie():
     if request.method == 'POST':
         cookie = request.json.get('cookie', '')
+        # Clean up cookie: remove newlines and extra spaces
+        cookie = cookie.replace('\n', '').replace('\r', '').strip()
         with open(COOKIE_FILE, 'w') as f:
             f.write(cookie)
         return jsonify({'success': True})
@@ -106,10 +108,35 @@ def parse_netease():
         # Construct filename
         filename = f"{artist} - {title}.mp3".replace('/', '_') # Sanitize
         
-        # Try to get audio URL (only works for free songs)
-        # Using a public endpoint often works for non-VIP songs
-        audio_url = f"http://music.163.com/song/media/outer/url?id={song_id}.mp3"
+        # Try to get audio URL
+        # Method 1: Standard player URL (sometimes redirected to 404 for VIP)
+        # audio_url = f"http://music.163.com/song/media/outer/url?id={song_id}.mp3"
         
+        # Method 2: Use API to get real download URL (Supports VIP if cookie is present)
+        # Endpoint: /api/song/enhance/player/url
+        try:
+            # Need csrf_token in params if cookie is present
+            csrf_token = ''
+            if 'csrf_token=' in headers.get('Cookie', ''):
+                csrf_token = headers['Cookie'].split('csrf_token=')[1].split(';')[0]
+             
+            player_api = "https://music.163.com/api/song/enhance/player/url"
+            params = {
+                "ids": f"[{song_id}]",
+                "br": 320000,  # High quality
+                "csrf_token": csrf_token
+            }
+            player_resp = requests.get(player_api, params=params, headers=headers)
+            player_data = player_resp.json()
+             
+            if player_data.get('data') and player_data['data'][0].get('url'):
+                audio_url = player_data['data'][0]['url']
+            else:
+                # Fallback to outer url
+                audio_url = f"http://music.163.com/song/media/outer/url?id={song_id}.mp3"
+        except:
+            audio_url = f"http://music.163.com/song/media/outer/url?id={song_id}.mp3"
+
         return jsonify({
             'success': True,
             'id': song_id,
@@ -174,6 +201,26 @@ def upload_file():
         return jsonify({'success': True, 'path': f"assets/audio/{filename}"})
     
     return jsonify({'error': 'Upload failed'}), 500
+
+@app.route('/api/files/delete', methods=['POST'])
+def delete_file():
+    filepath = request.json.get('path')
+    if not filepath:
+        return jsonify({'error': 'Missing path'}), 400
+    
+    # Security check: ensure path is within assets/audio
+    if not filepath.startswith('assets/audio/'):
+        return jsonify({'error': 'Invalid path'}), 403
+        
+    full_path = os.path.join(BASE_DIR, filepath)
+    try:
+        if os.path.exists(full_path):
+            os.remove(full_path)
+            return jsonify({'success': True})
+        else:
+            return jsonify({'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/git/push', methods=['POST'])
 def git_push():
