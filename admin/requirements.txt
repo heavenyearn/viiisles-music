@@ -4,3 +4,4 @@ beautifulsoup4
 mutagen
 pydub
 GitPython
+cos-python-sdk-v5

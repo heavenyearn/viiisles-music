@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from git import Repo
+from cos_uploader import CosUploader
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -14,6 +15,10 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 SONGS_JSON_PATH = os.path.join(DATA_DIR, 'songs.json')
 AUDIO_DIR = os.path.join(BASE_DIR, 'assets', 'audio')
 COOKIE_FILE = os.path.join(BASE_DIR, 'admin', 'cookie.txt')
+CONFIG_FILE = os.path.join(BASE_DIR, 'admin', 'config.json')
+
+# Init COS Uploader
+cos_uploader = CosUploader(CONFIG_FILE)
 
 # NetEase API (Unofficial endpoints)
 NETEASE_SONG_API = "http://music.163.com/api/song/detail/?id={}&ids=[{}]"
@@ -178,7 +183,18 @@ def download_audio():
             with open(target_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
-            return jsonify({'success': True, 'path': f"assets/audio/{filename}"})
+            
+            # Upload to COS if enabled
+            cos_url = cos_uploader.upload_file(target_path, f"audio/{filename}")
+            if cos_url:
+                # Optionally delete local file
+                try:
+                    os.remove(target_path)
+                except:
+                    pass
+                return jsonify({'success': True, 'path': cos_url})
+            else:
+                return jsonify({'success': True, 'path': f"assets/audio/{filename}"})
         else:
             return jsonify({'error': f'HTTP {r.status_code}'}), 500
             
@@ -198,7 +214,18 @@ def upload_file():
     if file and filename:
         target_path = os.path.join(AUDIO_DIR, filename)
         file.save(target_path)
-        return jsonify({'success': True, 'path': f"assets/audio/{filename}"})
+        
+        # Upload to COS if enabled
+        cos_url = cos_uploader.upload_file(target_path, f"audio/{filename}")
+        if cos_url:
+            # Optionally delete local file
+            try:
+                os.remove(target_path)
+            except:
+                pass
+            return jsonify({'success': True, 'path': cos_url})
+        else:
+            return jsonify({'success': True, 'path': f"assets/audio/{filename}"})
     
     return jsonify({'error': 'Upload failed'}), 500
 

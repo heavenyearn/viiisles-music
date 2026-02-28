@@ -18,15 +18,102 @@ class App {
             LikesManager.init();
             await this.loadSongs();
             if (this.isHistoryPage) {
+                // Keep for backward compatibility or direct access, though UI links to modal now
                 this.renderHistory();
             } else {
                 this.initPlayer();
                 this.renderHome();
+                this.initHistoryModal();
             }
         } catch (e) {
             console.error('Initialization error:', e);
             alert('Failed to load application data.');
         }
+    }
+
+    initHistoryModal() {
+        const modal = document.getElementById('history-modal');
+        const btn = document.getElementById('history-btn');
+        const closeBtn = document.querySelector('.close-modal');
+
+        if (btn) {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                modal.style.display = 'flex';
+                this.renderHistoryList();
+            }
+        }
+
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                modal.style.display = 'none';
+            }
+        }
+
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+
+    renderHistoryList() {
+        const list = document.getElementById('history-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+        const today = DateUtils.getTodayString();
+
+        // Filter and sort songs (up to today)
+        const historySongs = this.songs
+            .filter(s => s.date <= today)
+            .sort((a, b) => b.date.localeCompare(a.date));
+
+        historySongs.forEach(song => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            if (this.currentSong && this.currentSong.date === song.date) {
+                li.classList.add('active');
+            }
+
+            li.innerHTML = `
+                <img src="${song.coverImage}" class="history-cover" loading="lazy">
+                <div class="history-info">
+                    <div class="history-title">${song.title}</div>
+                    <div class="history-date">${DateUtils.formatDate(song.date)} · ${song.artist}</div>
+                </div>
+            `;
+
+            li.onclick = () => {
+                // Switch to this song
+                // We do this by changing URL param which triggers page reload? 
+                // Wait, if we reload page, music stops. 
+                // We need to update state without reload.
+                
+                // Close modal
+                document.getElementById('history-modal').style.display = 'none';
+
+                // Check if already playing
+                if (this.currentSong && this.currentSong.date === song.date) return;
+
+                // Update URL without reload (pushState)
+                const newUrl = `${window.location.pathname}?date=${song.date}`;
+                window.history.pushState({date: song.date}, '', newUrl);
+
+                // Update internal state and re-render home
+                this.renderHome();
+                
+                // Auto play new song
+                // renderHome will set this.currentSong
+                // We need to trigger play
+                if (this.player) {
+                    this.player.load(this.currentSong.audioFile);
+                    this.player.play();
+                }
+            };
+
+            list.appendChild(li);
+        });
     }
 
     async loadSongs() {

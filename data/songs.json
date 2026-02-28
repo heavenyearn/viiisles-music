@@ -1,6 +1,28 @@
 {
   "songs": [
     {
+      "date": "2026-03-10",
+      "title": "时间海",
+      "artist": "刘大拿",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/刘大拿 - 时间海.mp3",
+      "coverImage": "http://p1.music.126.net/3yUT5pGfMlgtv1qjrn7wlg==/109951168029889330.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=53",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-09",
+      "title": "今天也想见到你",
+      "artist": "焦迈奇",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/焦迈奇 - 今天也想见到你.mp3",
+      "coverImage": "http://p1.music.126.net/Ppzb5LV4l9R-yki1BQQB0A==/109951166267072680.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=31",
+      "genre": "",
+      "duration": 0
+    },
+    {
       "album": "",
       "artist": "洪尘",
       "audioFile": "assets/audio/洪尘 - 愿情（箫版）.mp3",
@@ -45,15 +67,15 @@
       "title": "For River - Piano (Johnny's Version)"
     },
     {
-      "date": "2026-03-02",
-      "title": "我是真的爱上你",
-      "artist": "en（王翊恩）",
       "album": "",
+      "artist": "en（王翊恩）",
       "audioFile": "assets/audio/en（王翊恩） - 我是真的爱上你.mp3",
-      "coverImage": "http://p2.music.126.net/4_Lo1T282dtupZMgS7r7WA==/109951170027008587.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=86",
+      "coverImage": "http://p2.music.126.net/4_Lo1T282dtupZMgS7r7WA==/109951170027008587.jpg",
+      "date": "2026-03-02",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "我是真的爱上你"
     },
     {
       "album": "",

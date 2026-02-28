@@ -19,7 +19,7 @@
         <header class="main-header">
             <div class="logo">Daily Song</div>
             <div class="date-display" id="current-date">Loading...</div>
-            <a href="history.html" class="nav-link">History</a>
+            <a href="#" id="history-btn" class="nav-link">History</a>
         </header>
 
         <!-- Main Content -->
@@ -80,6 +80,21 @@
         <footer class="main-footer">
             <p>Curated by <span id="curator-name">Viiisles</span></p>
         </footer>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>历史推荐</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ul id="history-list" class="history-list">
+                    <!-- List items will be injected here -->
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="js/app.js"></script>

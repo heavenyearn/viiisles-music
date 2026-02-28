@@ -2,3 +2,4 @@
 .trae/
 node_modules/
 .venv
+admin/config.json
