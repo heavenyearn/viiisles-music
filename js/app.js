@@ -63,6 +63,7 @@ class App {
     renderHome() {
         const dateStr = this.getCurrentDisplayDate();
         const song = this.getSongForDate(dateStr);
+        const today = DateUtils.getTodayString();
 
         // UI Elements
         const dateDisplay = document.getElementById('current-date');
@@ -79,7 +80,6 @@ class App {
         dateDisplay.textContent = DateUtils.formatDate(dateStr);
 
         // Navigation Logic
-        const today = DateUtils.getTodayString();
         // Disable next button if date is today or future (unless we have future songs)
         // For this app, let's assume we can't see future songs unless we are debugging
         if (dateStr >= today) {
@@ -100,11 +100,21 @@ class App {
         if (song) {
             this.currentSong = song;
             
+            // Determine dynamic recommendation text
+            let recommendationText = "";
+            if (dateStr === today) {
+                recommendationText = "今日推荐";
+            } else if (dateStr < today) {
+                recommendationText = "往日回顾"; // Or "Past Recommendation"
+            } else {
+                recommendationText = "未来预告"; // Should not happen in normal flow
+            }
+
             // Update UI
             document.title = `${song.title} - Daily Song`;
             titleEl.textContent = song.title;
             artistEl.textContent = song.artist;
-            recEl.textContent = song.recommendation;
+            recEl.textContent = recommendationText;
             
             const fallbackCover = song.coverImage;
             const fallbackBg = song.backgroundImage || song.coverImage;

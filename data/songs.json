@@ -8,7 +8,6 @@
       "audioFile": "assets/audio/AniFace - 我将在何处游荡.mp3",
       "coverImage": "https://picsum.photos/300/300?random=1",
       "backgroundImage": "https://picsum.photos/1920/1080?random=1",
-      "recommendation": "昨日推荐",
       "genre": "",
       "duration": 0
     },
@@ -20,7 +19,6 @@
       "audioFile": "assets/audio/马也_Crabbit - 海屿你.mp3",
       "coverImage": "https://picsum.photos/300/300?random=2",
       "backgroundImage": "https://picsum.photos/1920/1080?random=2",
-      "recommendation": "今日推荐",
       "genre": "",
       "duration": 0
     },
@@ -32,7 +30,6 @@
       "audioFile": "assets/audio/夏の喚く - 邱有句.mp3",
       "coverImage": "https://picsum.photos/300/300?random=3",
       "backgroundImage": "https://picsum.photos/1920/1080?random=3",
-      "recommendation": "明日推荐",
       "genre": "",
       "duration": 0
     }
