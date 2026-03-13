@@ -63,6 +63,16 @@ class CosUploader:
                     EnableMD5=False
                 )
             
+            # Set ACL to public-read (Try this to ensure it's accessible)
+            try:
+                self.client.put_object_acl(
+                    Bucket=self.bucket,
+                    Key=cos_path,
+                    ACL='public-read'
+                )
+            except Exception as e:
+                print(f"Warning: Failed to set ACL public-read: {e}")
+            
             # Construct URL
             if self.cdn_domain:
                 url = f"https://{self.cdn_domain}/{cos_path}"
