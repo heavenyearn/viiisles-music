@@ -1,59 +1,114 @@
 {
   "songs": [
     {
-      "date": "2026-03-20",
-      "title": "浮光 (The History)",
+      "date": "2026-03-27",
+      "title": "鲜花 (Live)",
+      "artist": "回春丹",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/回春丹 - 鲜花 (Live).mp3",
+      "coverImage": "http://p2.music.126.net/-Tija1G1k4UnrSo6t0UXww==/109951168964989770.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=55",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-26",
+      "title": "星河不可及",
+      "artist": "CMJ",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/CMJ - 星河不可及.mp3",
+      "coverImage": "http://p1.music.126.net/3eTlVUU5gTkxHfK3ZuNJOg==/109951164544448724.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=73",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-25",
+      "title": "一直想问你",
+      "artist": "陈村长",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/陈村长 - 一直想问你.mp3",
+      "coverImage": "http://p2.music.126.net/jFxGA290VMCgYxzfTndhVw==/109951167815134769.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=55",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-24",
+      "title": "secret base（钢琴版）",
+      "artist": "Knight9",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/Knight9 - secret base（钢琴版）.mp3",
+      "coverImage": "http://p2.music.126.net/XXWsHIXCEKFZ9lJlr4CG0w==/109951166131856896.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=68",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "date": "2026-03-23",
+      "title": "深海",
+      "artist": "刘森",
+      "album": "",
+      "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/刘森 - 深海.mp3",
+      "coverImage": "http://p1.music.126.net/rDC1vd4RnngyLPmbjeffPg==/109951167261752746.jpg",
+      "backgroundImage": "https://picsum.photos/1920/1080?random=17",
+      "genre": "",
+      "duration": 0
+    },
+    {
+      "album": "",
       "artist": "Jannik",
-      "album": "",
       "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/Jannik - 浮光 (The History).mp3",
-      "coverImage": "http://p2.music.126.net/c55oo6_xrGMZP8vIrSGTZg==/109951164401545279.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=67",
+      "coverImage": "http://p2.music.126.net/c55oo6_xrGMZP8vIrSGTZg==/109951164401545279.jpg",
+      "date": "2026-03-20",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "浮光 (The History)"
     },
     {
-      "date": "2026-03-19",
-      "title": "记忆点",
+      "album": "",
       "artist": "陈卓璇",
-      "album": "",
       "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/陈卓璇 - 记忆点.mp3",
-      "coverImage": "http://p2.music.126.net/sjP8D-7ASU72yg0BASfdJg==/109951172516806123.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=74",
+      "coverImage": "http://p2.music.126.net/sjP8D-7ASU72yg0BASfdJg==/109951172516806123.jpg",
+      "date": "2026-03-19",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "记忆点"
     },
     {
-      "date": "2026-03-18",
-      "title": "归零",
+      "album": "",
       "artist": "魔鬼花园（李安健）",
-      "album": "",
       "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/魔鬼花园（李安健） - 归零.mp3",
-      "coverImage": "http://p1.music.126.net/yfKaxCHVJnA3FtHnMrgMuQ==/109951172390811029.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=77",
+      "coverImage": "http://p1.music.126.net/yfKaxCHVJnA3FtHnMrgMuQ==/109951172390811029.jpg",
+      "date": "2026-03-18",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "归零"
     },
     {
-      "date": "2026-03-17",
-      "title": "咏春",
+      "album": "",
       "artist": "七朵组合",
-      "album": "",
       "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/七朵组合 - 咏春.mp3",
-      "coverImage": "http://p1.music.126.net/GE9hj6I9A-fL64_tFuGZAA==/109951172859327838.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=30",
+      "coverImage": "http://p1.music.126.net/GE9hj6I9A-fL64_tFuGZAA==/109951172859327838.jpg",
+      "date": "2026-03-17",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "咏春"
     },
     {
-      "date": "2026-03-16",
-      "title": "长生树",
-      "artist": "在虚无中永存",
       "album": "",
+      "artist": "在虚无中永存",
       "audioFile": "https://heavenyearn-1257011588.cos.ap-nanjing.myqcloud.com/audio/在虚无中永存 - 长生树.mp3",
-      "coverImage": "http://p2.music.126.net/0wgcBs8wU7wPI6uo5kIUVg==/109951172225724242.jpg",
       "backgroundImage": "https://picsum.photos/1920/1080?random=38",
+      "coverImage": "http://p2.music.126.net/0wgcBs8wU7wPI6uo5kIUVg==/109951172225724242.jpg",
+      "date": "2026-03-16",
+      "duration": 0,
       "genre": "",
-      "duration": 0
+      "title": "长生树"
     },
     {
       "album": "",
